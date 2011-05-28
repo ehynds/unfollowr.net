@@ -8,7 +8,7 @@ var express = require('express'),
     twitterauth = require('../twitterauth'),
 
     // futures stuff
-    PIO = require('promised-io/promise'),
+    PIO = require('promised-io/lib/promise'),
     Deferred = PIO.Deferred,
     when = PIO.when,
 
