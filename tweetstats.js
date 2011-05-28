@@ -48,8 +48,8 @@ function consumer() {
     twitterauth.key, // consumer key
     twitterauth.secret, // consumer secret
     "1.0A",
-    "http://www.tweetstats.org/twitter/callback",
-    // "http://localhost:8080/twitter/callback",
+    // "http://www.tweetstats.org/twitter/callback",
+    "http://localhost:8080/twitter/callback",
     "HMAC-SHA1"
   );
 }
@@ -73,9 +73,9 @@ function daydiff( date ){
 }
 
 // quick util function for querying twitter
-function query( url, req, callback ){
+function query( url, type, req, callback ){
   consumer().getProtectedResource(
-    url, "POST", req.session.oauthAccessToken, req.session.oauthAccessTokenSecret,
+    url, type, req.session.oauthAccessToken, req.session.oauthAccessTokenSecret,
     callback
   );
 }
@@ -89,7 +89,6 @@ app.get('/', function(req, res){
 
     return;
   }
-
   res.render('index', {
     locals: { page: 'index' }
   });
@@ -151,7 +150,7 @@ app.get('/twitter/callback/?', function(req, res){
 });
 
 app.get('/twitter/unfollow/:screen_name', restrict, function( req, res ){
-  query('http://api.twitter.com/1/friendships/destroy.json?screen_name=' + req.params.screen_name, req, function( error, data ){
+  query('http://api.twitter.com/1/friendships/destroy.json?screen_name=' + req.params.screen_name, "POST", req, function( error, data ){
     res.send(JSON.stringify( error && { "statusCode":error.statusCode } || true ));
 
     var user_id = ''+req.session.user_id;
@@ -187,21 +186,21 @@ app.get('/twitter/get/:limit?', restrict, function( req, res ){
         console.log('using data from cache', data.data.length);
         dfd.resolve( data.data );
       } else {
-        query("http://api.twitter.com/1/friends/ids.json?user_id=" + user_id, req, function( error, friends ){
+        query("http://api.twitter.com/1/friends/ids.json?user_id=" + user_id, "GET", req, function( error, friends ){
           if( error ){
             res.send(JSON.stringify(error));
             return;
           }
         
           friends = JSON.parse(friends);
-          
+
           var limit = req.params.limit,
               num_friends = friends.length,
               ret = [], chunk;
           
           // loop through all friends, altering the array in the process
           while( friends.length && (chunk = friends.splice(0, 100)) ){
-            query('http://api.twitter.com/1/users/lookup.json?user_id=' + chunk.join(), function( error, frienddata ){
+            query('http://api.twitter.com/1/users/lookup.json?user_id=' + chunk.join(), "GET", req, function( error, frienddata ){
               if( error ){
                 res.send(JSON.stringify(error));
                 return;
