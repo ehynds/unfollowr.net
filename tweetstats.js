@@ -5,7 +5,7 @@ var express = require('express'),
     cradle = require('cradle'),
 
     // twitter client/consumer secrets
-    twitterauth = require('./twitterauth'),
+    twitterauth = require('../twitterauth'),
 
     // futures stuff
     PIO = require('promised-io/promise'),
