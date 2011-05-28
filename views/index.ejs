@@ -1,0 +1,53 @@
+<div id="loading"><img src="/images/spinner.gif" alt="Loading" /></div>
+
+<div id="error">
+	<h3>Oops, something went wrong.</h3>
+	<p>Twitter didn't send us any data back, which probably means we've exceeded their rate limit.</p>
+	<p>Please try again in a little bit.</p>
+</div>
+
+<ul id="target"></ul>
+
+<script type="text/html" id="tmplFriend">
+	<li>
+		<a class="unfollow" href="#" data-sn="<%= friend.sn %>" data-index="<%= index %>">unfollow</a>
+		<span class="index"><%= index %></span>
+		<img src="<%= friend.i %>" />
+		
+		<div class="name">
+			<h4><%= friend.n %></h4>
+			<p>@<a href="http://www.twitter.com/<%= friend.sn %>"><%= friend.sn %></a><p>
+		</div>
+
+		<ul>
+			<li>
+				<h3 class="tpd<% if(mode === 'tpd'){ %> active<% } %>"><%= friend.tpd %></h3>
+				<p>average tweets<br />per day</p>
+			</li>
+			<li>
+				<h3 class="dl<% if(mode === 'dl'){ %> active<% } %>">
+					<% if(friend.dl == -1){ %>
+						never
+					<% } else if(friend.dl == 0){ %>
+						today
+					<% } else { %>
+						<%= friend.dl %> day<% if(friend.dl != 1){ %>s<% } %>
+					<% } %>
+				</h3>
+				
+				<p>
+					<% if(friend.dl == -1){ %>
+						this user has never tweeted
+					<% } else { %>
+						<% if(friend.dl != 0){ %>since<% } %>
+						last tweet<br /> on <%= app.format(friend.l) %>
+					<% } %>
+				</p>
+			</li>
+			<li>
+				<h3 class="t<% if(mode === 't'){ %> active<% } %>"><%= friend.t %></h3>
+				<p title="<%= friend.n %> joined Twitter on <%= app.format(friend.c) %>">tweets in<br /><%= friend.d %> days</p>
+			</li>
+		</ul>
+	</li>
+</script>
