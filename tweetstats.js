@@ -247,7 +247,7 @@ app.get('/twitter/get/:limit?', restrict, function( req, res ){
                 });
                 
                 // cache
-                db.save( ''+user_id, { data:ret });
+                // db.save( ''+user_id, { data:ret });
                 
                 // resolve promise
                 dfd.resolve( ret );
