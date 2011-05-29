@@ -22,7 +22,6 @@ var express = require('express'),
     NOW = +new Date;
 
 app.configure(function(){
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
   app.use(express.logger());
   app.use(express.cookieParser());
   app.use(express.session({ secret:'tweetstatsdotorg' }));
@@ -33,6 +32,14 @@ app.configure(function(){
     open: '{{',
       close: '}}'
   });
+});
+
+app.configure('development', function(){
+  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+});
+
+app.configure('production', function(){
+  app.use(express.errorHandler());
 });
 
 app.dynamicHelpers({
@@ -48,8 +55,7 @@ function consumer() {
     twitterauth.key, // consumer key
     twitterauth.secret, // consumer secret
     "1.0A",
-    // "http://www.tweetstats.org/twitter/callback",
-    "http://localhost:8080/twitter/callback",
+    "http://" + (process.env.NODE_ENV === "development" ? "localhost:8080" : "www.tweetstats.org") + "/twitter/callback",
     "HMAC-SHA1"
   );
 }

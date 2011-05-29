@@ -28,8 +28,6 @@ namespace :deploy do
   end
  
   task :after_deploy do
-    # run "forever stopall"
-    # run "forever start ~/public_html/tweetstats.org/current/tweetstats.js"
-    run "forever restart 0"
+    run "NODE_ENV=production forever restart 0"
   end
 end
