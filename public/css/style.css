@@ -224,6 +224,7 @@ nav span { margin:0 12px }
 /* change some stuff depending on the page */
 .index #container { width:740px }
 .index #body { padding:0 }
+.login #container { margin-top:12% }
 .login #body { line-height:18px }
 
 #target { margin-left:0; }
