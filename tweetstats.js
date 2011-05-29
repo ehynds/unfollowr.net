@@ -100,14 +100,11 @@ app.get('/', function(req, res){
   });
 });
 
-app.get('/logout/?', restrict, function( req, res ){
+app.get('/logout/?', function( req, res ){
   var user_id = req.session.user_id;
 
   req.session.destroy(function(){
-    db.remove( ''+user_id, function(){
-      console.log('user removed', arguments)
-    });
-
+    db.remove( ''+user_id );
     res.redirect('/');
   });
 });
@@ -253,7 +250,7 @@ app.get('/twitter/get/:limit?', restrict, function( req, res ){
                 });
                 
                 // cache
-                // db.save( ''+user_id, { data:ret });
+                db.save( ''+user_id, { data:ret });
                 
                 // resolve promise
                 dfd.resolve( ret );
