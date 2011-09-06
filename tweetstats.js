@@ -78,6 +78,10 @@ function daydiff( date ){
   }
 }
 
+function clearCache( user_id ){
+  db.remove( ''+user_id );
+}
+
 // quick util function for querying twitter
 function query( url, type, req, callback ){
   consumer().getProtectedResource(
@@ -95,6 +99,7 @@ app.get('/', function(req, res){
 
     return;
   }
+  
   res.render('index', {
     locals: { page: 'index' }
   });
@@ -104,7 +109,7 @@ app.get('/logout/?', function( req, res ){
   var user_id = req.session.user_id;
 
   req.session.destroy(function(){
-    db.remove( ''+user_id );
+    clearCache( req.session.user_id );
     res.redirect('/');
   });
 });
@@ -145,6 +150,7 @@ app.get('/twitter/callback/?', function(req, res){
         } else {
           req.session.handle = data["screen_name"];
           req.session.user_id = data["id"];
+          clearCache( data["id"] );
           res.redirect('/');
         }
       });
