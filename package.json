@@ -1,0 +1,27 @@
+{
+  "name": "TweetStats",
+  "version": "0.2.0",
+  "private": true,
+  "scripts": {
+    "start": "node server/app.js",
+    "deploy": "grunt release && cap deploy"
+  },
+  "dependencies": {
+    "express": "3.1.x",
+    "oauth": "0.9.x",
+    "cradle": "0.6.x",
+    "async": "0.2.x",
+    "jade": "0.28.x"
+  },
+  "devDependencies": {
+    "grunt": "0.4.x",
+    "grunt-contrib-copy": "0.4.x",
+    "grunt-contrib-jshint": "0.3.x",
+    "grunt-contrib-clean": "0.4.x",
+    "grunt-contrib-concat": "0.3.x",
+    "grunt-contrib-watch": "0.3.x",
+    "grunt-contrib-sass": "0.2.x",
+    "grunt-contrib-uglify": "0.1.2",
+    "grunt-image-embed": "0.3.x"
+  }
+}

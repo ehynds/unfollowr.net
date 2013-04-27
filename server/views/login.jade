@@ -1,0 +1,9 @@
+extends layout
+
+block variables
+  - var page = 'login'
+
+block body
+  p Determine who among your Twitter friends are actually worth following, based on a number of different metrics.
+  a(href="/twitter/connect", id="connect")
+    img(src="/images/login.png", alt="Login")
