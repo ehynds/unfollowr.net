@@ -1,4 +1,6 @@
 @import "normalize.scss";
+$blue: #5783af;
+$dark-blue: #3B658E;
 
 * {
   -moz-box-sizing: border-box;
@@ -44,7 +46,11 @@ h3 {
 }
 
 a {
-  color: #5783af;
+  color: $blue;
+
+  &:hover {
+    color: $dark-blue;
+  }
 }
 
 p {
@@ -68,7 +74,6 @@ footer {
   }
 }
 
-/* fixed nav */
 nav {
   position: fixed;
   bottom: 0;
@@ -76,18 +81,10 @@ nav {
   width: 100%;
   padding: 20px;
   text-shadow: 0 0 1px #444;
-  border-top: 1px solid #b5b5b5;
-  -moz-box-shadow: 0px 0px 4px #000;
-  -webkit-box-shadow: 0px 0px 4px #000;
-  box-shadow: 0px 0px 10px #777;
-  background-color: #5783af;
-  background-image: -moz-linear-gradient(top, #5783af, #3B658E); 
-  background-image: -ms-linear-gradient(top, #5783af, #3B658E); 
-  background-image: -o-linear-gradient(top, #5783af, #3B658E); 
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#5783af), to(#3B658E)); 
-  background-image: -webkit-linear-gradient(top, #5783af, #3B658E); 
-  background-image: linear-gradient(top, #5783af, #3B658E);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#5783af', EndColorStr='#3B658E'); 
+  -moz-box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  background-color: $dark-blue;
   color: #fff;
   font-size: 14px;
 
@@ -95,32 +92,47 @@ nav {
     margin: 0 12px;
   }
 
-  select, a {
+  select {
     margin: 0 6px;
   }
 
-  a {
-    color: #fff;
-    text-decoration: none;
-    &:hover { text-decoration: underline }
+  p {
+    margin: 0;
+    float: right;
   }
-} 
 
+  a {
+    text-decoration: none;
+    color: #fff;
+    padding: 5px;
+    margin: 0 3px;
 
-/* icons */
-.icon { padding:2px 0 2px 18px; background-position:left; background-repeat:no-repeat; }
-.icon-logout { background-image:url(/images/user_go.png) }
-.icon-bottom { background-image:url(/images/arrow_bottom.png) }
-.icon-top { background-image:url(/images/arrow_top.png) }
+    &:hover {
+      color: #fff;
+      background-color: #5783af;
+      border-radius: 3px;
+    }
+
+    &.scroll:nth-of-type(1):before {
+      content: '\2193';
+      padding: 0 5px 0 0;
+    }
+
+    &.scroll:nth-of-type(2):before {
+      content: '\2191';
+      padding: 0 5px 0 0;
+    }
+  }
+}
 
 #error {
   display: none;
   text-align: left;
   padding: 10px;
   margin: 0;
-  background: #FFF6BF;
+  background: #FFFDED;
   color: #514721;
-  border: 2px solid #FFD324;
+  border: 2px solid #FCE796;
 
   h3 {
     font-size: 16px;
@@ -135,7 +147,6 @@ nav {
   }
 }
 
-/* elems */
 #container {
   margin: 0 auto;
   padding: 0 15px;
@@ -192,10 +203,6 @@ nav {
   margin: 0;
   padding: 0;
 
-  /* > li > * { */
-    /* border: 1px solid red; */
-  /* } */
-
   .index {
     float: left;
     font-size: 20px;
@@ -219,51 +226,84 @@ nav {
   .unfollow {
     float: right;
     margin: 14px 0 0 0;
-    padding: 6px 15px;
+    padding: 6px 10px;
     display: inline-block;
-    -moz-border-radius: 6px;
-    -webkit-border-radius: 6px;
-    border-radius: 6px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
     background: #607890;
     color: #fff;
     text-decoration: none;
-    font-size: 11px;
-    background-color: #507CA8;
-    background-image: -moz-linear-gradient(top, #507CA8, #3B658E);
-    background-image: -ms-linear-gradient(top, #507CA8, #3B658E);
-    background-image: -o-linear-gradient(top, #507CA8, #3B658E);
-    background-image: -webkit-gradient(linear, left top, left bottom, from(#507CA8), to(#3B658E));
-    background-image: -webkit-linear-gradient(top, #507CA8, #3B658E);
-    background-image: linear-gradient(top, #507CA8, #3B658E);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#507CA8', EndColorStr='#3B658E');
-    text-shadow: 1px 1px 1px #2d2d2d;
+    font-size: 12px;
+    background-color: $blue;
+    text-shadow: 1px 1px 1px #5c5c5c;
 
     &:hover {
-      background-color: #3B658E;
-      background-image: -moz-linear-gradient(top, #3B658E, #507CA8);
-      background-image: -ms-linear-gradient(top, #3B658E, #507CA8);
-      background-image: -o-linear-gradient(top, #3B658E, #507CA8);
-      background-image: -webkit-gradient(linear, left top, left bottom, from(#3B658E), to(#507CA8));
-      background-image: -webkit-linear-gradient(top, #3B658E, #507CA8);
-      background-image: linear-gradient(top, #3B658E, #507CA8);
-      filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#3B658E', EndColorStr='#507CA8');
-    }
-
-    &:active {
-      position: relative;
-      top: 1px;
+      background-color: $dark-blue;
     }
   }
 }
 
-#target ul { overflow:hidden; list-style:none; float:left; margin: 0; padding: 0; }
-#target ul li { float: left; width: 100px; margin:0 5px }
-#target ul li p { font-size:11px }
-#target ul li h3 { font-size: 20px; color:#828282 }
-#target ul li h3.active { color:#000 }
-#target > li { list-style-type:none; line-height:normal; margin:0; padding:20px 10px; border-bottom:1px solid #dbdbdb; overflow:hidden }
-#target > li:nth-child(even){ background:#fff }
-#target > li:last-child { border-bottom:none }
-#target > li p { font-size:11px; margin:0 }
-#target > li h4 { margin: 0; padding: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-#target > li h4 span { font-size:11px; font-weight:normal }
+#target {
+  ul {
+    overflow:hidden;
+    list-style:none;
+    float:left;
+    margin: 0;
+    padding: 0;
+
+    li {
+      float: left;
+      width: 100px;
+      margin: 0 5px;
+
+      p {
+        font-size: 11px;
+      }
+
+      h3 {
+        font-size: 20px;
+        color: #828282;
+
+        &.active {
+          color: #000;
+        }
+      }
+    }
+  }
+
+  & > li {
+    list-style-type: none;
+    line-height: normal;
+    margin: 0;
+    padding: 20px 10px;
+    border-bottom: 1px solid #dbdbdb;
+    overflow: hidden;
+
+    &:nth-child(even) {
+      background: #fff;
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    p {
+      font-size: 11px;
+      margin: 0;
+    }
+
+    h4 {
+      margin: 0;
+      padding: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      span {
+        font-size: 11px;
+        font-weight: normal;
+      }
+    }
+  }
+}

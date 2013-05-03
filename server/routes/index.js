@@ -5,7 +5,8 @@ var twitter = controllers.twitter;
 
 // require twitter auth middleware
 function restrict(req, res, next) {
-  return !req.session.oauthAccessToken ?
+  console.log('restrict', req.session);
+  return req.session.oauthAccessToken == null ?
     next(new Error('You must be logged into Twitter first')) :
     next();
 }
@@ -22,5 +23,5 @@ module.exports = function(app) {
   app.get('/twitter/connect', twitter.connect);
   app.get('/twitter/callback', twitter.callback);
   app.get('/twitter/unfollow/:screen_name', restrict, twitter.unfollow);
-  app.get('/twitter/get/:limit?', restrict, twitter.get);
+  app.get('/twitter/get', restrict, twitter.get);
 };

@@ -4,17 +4,17 @@ module.exports = function(grunt) {
 
   // Project configuration.
   grunt.initConfig({
-    pkg: "<json:package.json>",
+    pkg: '<json:package.json>',
 
     clean: {
-      all: ["client-dist/"]
+      all: ['client-dist/']
     },
 
     copy: {
       all: {
         files: [
           // everything except scss files
-          { src: ["**", "!**/*.scss"], dest: "client-dist", cwd: "client/", expand: true }
+          { src: ['**', '!**/*.scss'], dest: 'client-dist', cwd: 'client/', expand: true }
         ]
       }
     },
@@ -22,10 +22,25 @@ module.exports = function(grunt) {
     sass: {
       all: {
         files: {
-          "client-dist/styles/style.css": "client/styles/style.scss"
+          'client-dist/styles/style.css': 'client/styles/style.scss'
         },
         options: {
-          style: "compressed"
+          style: 'compressed'
+        }
+      }
+    },
+
+    jst: {
+      options: {
+        processName: function(filename) {
+          return filename.split('/').pop();
+        }
+      },
+      compile: {
+        files: {
+          'client-dist/scripts/templates.js': [
+            'client/templates/**/*.html'
+          ]
         }
       }
     },
@@ -36,21 +51,22 @@ module.exports = function(grunt) {
       },
       all: {
         src: [
-          "client/scripts/libs/**/*.js",
-          "client/scripts/app.js"
+          'client-dist/scripts/templates.js',
+          'client/scripts/libs/**/*.js',
+          'client/scripts/app.js'
         ],
-        dest: "client-dist/scripts/app.js"
+        dest: 'client-dist/scripts/app.js'
       }
     },
 
     uglify: {
       options: {
-        preserveComments: "some"
+        preserveComments: 'some'
       },
       all: {
         files: {
-          "client-dist/scripts/app.js": [
-            "client-dist/scripts/app.js"
+          'client-dist/scripts/app.js': [
+            'client-dist/scripts/app.js'
           ]
         }
       }
@@ -59,21 +75,21 @@ module.exports = function(grunt) {
     watch: {
       styles: {
         options: { interrupt: true },
-        files: ["client/**/*.scss"],
-        tasks: ["default"]
+        files: ['client/**/*.scss'],
+        tasks: ['default']
       },
       scripts: {
         options: { interrupt: true },
-        files: ["client/**/*.js"],
-        tasks: ["default"]
+        files: ['client/**/*.js'],
+        tasks: ['default']
       }
     },
 
     jshint: {
       files: [
-        "Gruntfile.js",
-        "client/scripts/!(libs)/**/*.js",
-        "server/**/*.js"
+        'Gruntfile.js',
+        'client/scripts/*.js',
+        'server/**/*.js'
       ],
       options: {
         curly: true,
@@ -89,32 +105,36 @@ module.exports = function(grunt) {
         eqnull: true,
         browser: true,
         node: true,
+        jquery: true,
         globals: {
-          _: true
+          _: true,
+          JST: true
         }
       }
     }
   });
 
-  grunt.loadNpmTasks("grunt-contrib-sass");
-  grunt.loadNpmTasks("grunt-contrib-copy");
-  grunt.loadNpmTasks("grunt-contrib-clean");
-  grunt.loadNpmTasks("grunt-contrib-concat");
-  grunt.loadNpmTasks("grunt-contrib-jshint");
-  grunt.loadNpmTasks("grunt-contrib-watch");
-  grunt.loadNpmTasks("grunt-contrib-uglify");
+  grunt.loadNpmTasks('grunt-contrib-sass');
+  grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-jst');
 
-  grunt.registerTask("default", [
-    "jshint",
-    "clean",
-    "copy",
-    "sass",
-    "concat"
+  grunt.registerTask('default', [
+    'jshint',
+    'clean',
+    'copy',
+    'sass',
+    'jst',
+    'concat'
   ]);
 
-  grunt.registerTask("release", [
-    "default",
-    "uglify"
+  grunt.registerTask('release', [
+    'default',
+    'uglify'
   ]);
 
 };

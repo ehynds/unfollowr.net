@@ -1,6 +1,8 @@
+/* global alert, confirm */
 window.app = (function() {
-  // cache some re-used DOM notes/templates
-  var tmplFriend = _.template($('#tmplFriend').html());
+
+  // Cache some re-used DOM notes/templates
+  var tmplRow = JST['row.html'];
   var $target = $('#target');
   var $body = $(document.body);
   var $loading = $('#loading');
@@ -8,11 +10,18 @@ window.app = (function() {
   var $nav = $('nav');
   var $footer = $('footer');
 
-  var app = {
-    // default rendering options
-    // TODO make constants
-    mode: 'tpd',
+  // Consts
+  var RENDER_MODE_TWEETS_PER_DAY = 'tpd';
+  var RENDER_MODE_DAYS_SINCE_LAST_TWEET = 'dl';
+  var RENDER_MODE_TOTAL_TWEETS = 't';
 
+  // Create namespace
+  var app = {
+
+    // Default rendering mode
+    mode: RENDER_MODE_TWEETS_PER_DAY,
+
+    // Initialization function
     init: function() {
       $.getJSON('/twitter/get/')
         .done(_.bind(this.render, this))
@@ -24,45 +33,60 @@ window.app = (function() {
     },
 
     render: function(data) {
-      // copy the data set to retain the original during chunking
-      this.data || $.extend(true, this, {
-        data: data
-      });
+      // Copy the data set to retain the original during chunking
+      if(this.data == null) {
+        $.extend(true, this, {
+          data: data
+        });
+      }
 
-      // check for errors first
+      // Check for & handle any server errors first
       if(this.data.statusCode || this.data.message) {
-        $error.fadeIn("fast");
-        $loading.fadeOut("fast");
-        $nav.fadeOut("fast");
+        $error.fadeIn('fast');
+        $loading.fadeOut('fast');
+        $nav.fadeOut('fast');
         return;
       }
 
-      var data = $.extend(true, [], this.data);
+      // Create a local copy of the data so we can alter it
+      data = $.extend(true, [], this.data);
+
       var len = data.length;
-      var max = data[len - 1].tpd;
+      var max = data[len - 1].RENDER_MODE_TWEETS_PER_DAY;
       var counter = 0;
       var mode = this.mode;
       var self = this;
       var ret;
 
-      // prepare target
+      // Prepare target
       $target.empty();
 
-      // sort data?
-      if(mode !== 'tpd') {
+      // Sort data if it's not the default. Data will come back sorted
+      // already.
+      if(mode !== RENDER_MODE_TWEETS_PER_DAY) {
         data = _.sortBy(data, function(friend) {
-          return friend && +friend[mode];
+          return friend && parseFloat(friend[mode]);
         });
 
-        mode === 'dl' && data.reverse();
+        if(mode === RENDER_MODE_DAYS_SINCE_LAST_TWEET) {
+          data.reverse();
+        }
       }
 
-      // render in chunks to prevent timeout errors
+      // Render in chunks to prevent timeout errors with large data
+      // sets (looking at you, IE)
       (function chunk() {
         var batch = data.splice(0, 50);
+        var ret;
 
-        ret = $.map(batch, function(friend) {
-          return friend == null ? null : tmplFriend({
+        // Remove any null/undef friends
+        ret = _.reject(batch, function(friend) {
+          return friend == null;
+        });
+
+        // Create an array of HTML rows
+        ret = _.map(ret, function(friend) {
+          return tmplRow({
             index: ++counter,
             friend: friend,
             max: max,
@@ -70,8 +94,10 @@ window.app = (function() {
           });
         });
 
+        // Inject into the DOM
         $target.append(ret.join(''));
 
+        // Keep on chunking if there's more data to go through.
         if(data.length) {
           setTimeout(chunk, 10);
         } else {
@@ -80,16 +106,16 @@ window.app = (function() {
       })();
     },
 
-    fail: function(){
+    fail: function() {
       alert('An error occurred trying to retreive your data. Are you still logged into twitter?');
     },
 
-    done: function(){
+    done: function() {
       $loading.fadeOut('fast');
     },
 
     sort: function(event) {
-      this.mode = event.target.value;
+      this.mode = event.currentTarget.value;
       this.render();
     },
 
@@ -97,28 +123,34 @@ window.app = (function() {
       event.preventDefault();
 
       $body.add('html').animate({
-        scrollTop: event.target.className.indexOf('top') > -1 ? 0 : $footer.offset().top
+        scrollTop: event.currentTarget.className.indexOf('top') > -1 ?
+          0 :
+          $footer.offset().top
       }, 'fast');
     },
 
     unfollow: function(event) {
       event.preventDefault();
 
-      var target = event.currentTarget;
+      var $target = $(event.currentTarget);
       var data = this.data;
-      var sn = target.getAttribute('data-sn');
-      var index = +target.getAttribute('data-index');
+      var sn = $target.data('sn');
+      var index = $target.data('index');
 
       if(!confirm('Unfollow @' + sn + '?')) {
         return;
       }
 
-      $.getJSON('/twitter/unfollow/' + sn).done(function(resp) {
-          if(resp === true) {
-            $(target.parentNode).fadeOut('fast');
+      $.getJSON('/twitter/unfollow/' + sn).done(function(res) {
+          if(res === true) {
+            $target.parent().fadeOut('fast');
             data.splice(index, 1);
           } else {
-            alert('Unable to unfollow this user. Something about a ' + resp.statusCode + '.');
+            if(res.statusCode === 401 && confirm('You are no longer signed into Twitter. Continue to login?')) {
+              window.location = '/twitter/connect';
+            } else {
+              alert('Unable to unfollow this user: ' + res.error + '.');
+            }
           }
       }).fail(function() {
         alert('An error occurred trying to unfollow this user.\n\nYou are probably no longer logged in; please refresh this page and try again.');
@@ -126,24 +158,27 @@ window.app = (function() {
     }
   };
 
-  // kick this thing off
+  // Kick this thing off
   app.init();
 
-  // public methods
-  return {
-    format: function(ts) {
-      var date = new Date(ts);
+  // Expose public methods
+  return (function() {
+    function pad(number) {
+      return number < 10 ? ('0' + number) : number;
+    }
 
-      function pad(number) {
-        return number < 10 ? ('0' + number) : number;
+    return {
+      format: function(ts) {
+        var date = new Date(ts);
+
+        return 'mm-dd-yyyy'.replace(/(\w+)/g, function(part) {
+          return part === 'mm' ?
+            pad(date.getMonth() + 1) : part === 'dd' ?
+            pad(date.getDate()) : part === 'yyyy' ?
+            date.getFullYear() : '';
+        });
       }
+    };
+  })();
 
-      return 'mm-dd-yyyy'.replace(/(\w+)/g, function( part ){
-        return part === 'mm'
-        ? pad(date.getMonth() + 1) : part === 'dd'
-        ? pad(date.getDate()) : part === 'yyyy'
-        ? date.getFullYear() : '';
-      });
-    },
-  }
 })();
