@@ -3,10 +3,10 @@ set :domain,  "69.164.222.103"
 set :user,    "ehynds" 
 set :port,     8486
 set :application, "unfollowr.net"
-set :repository, "file://#{File.expand_path('.')}" 
+set :repository, "."
+set :scm, :none
 set :deploy_via, :copy
 set :copy_exclude, [".git", ".DS_Store", "node_modules", ".sass-cache", "client", "*.dump", "*.log"]
-set :scm, :git
 set :deploy_to, "/home/#{user}/public_html/#{application}" 
 set :use_sudo, false
 
