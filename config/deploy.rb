@@ -2,10 +2,10 @@
 set :domain,  "69.164.222.103"
 set :user,    "ehynds" 
 set :port,     8486
-set :application, "tweetstats.org" 
+set :application, "unfollowr.net"
 set :repository, "file://#{File.expand_path('.')}" 
 set :deploy_via, :copy
-set :copy_exclude, [".git", ".DS_Store"] 
+set :copy_exclude, [".git", ".DS_Store", "node_modules", ".sass-cache", "client", "*.dump", "*.log"]
 set :scm, :git
 set :deploy_to, "/home/#{user}/public_html/#{application}" 
 set :use_sudo, false
@@ -13,21 +13,31 @@ set :use_sudo, false
 server "#{domain}", :app, :web, :db, :primary => true 
 
 # this tells capistrano what to do when you deploy
-namespace :deploy do 
- 
-  task :default do 
-    transaction do 
-      update_code
-      symlink
-    end
+namespace :deploy do
+
+  task :stop do
+    run "forever stop #{current_path}/server/app.js"
   end
- 
-  task :update_code, :except => { :no_release => true } do 
-    on_rollback { run "rm -rf #{release_path}; true" } 
-    strategy.deploy! 
+
+  task :start do
+    run "mkdir -p #{release_path}/logs"
+    run "cd #{current_path} && NODE_ENV=production forever start -a -o logs/out.log -e logs/error.log #{current_path}/server/app.js"
   end
- 
-  task :after_deploy do
-    run "NODE_ENV=production forever restart 0"
+
+  task :restart do
+    stop
+    sleep 15
+    start
   end
+
+  task :npm do
+    run "cd #{release_path} && npm update && npm install --production"
+  end
+
+  task :sym_dirs do
+    run "cd #{current_path}/public"
+  end
+
 end
+
+after "deploy", "deploy:cleanup", "deploy:npm", "deploy:restart"
