@@ -208,20 +208,7 @@ nav {
 #target {
   margin: 0;
   padding: 0;
-
-  .index {
-    float: left;
-    font-size: 20px;
-    color: #b7b7b7; 
-    padding: 15px 20px 15px 10px;
-  }
-
-  img {
-    float: left;
-    width: 48px;
-    height: 48px;
-    margin: 4px 5px 0 5px;
-  }
+  counter-reset: row;
 
   .name {
     float: left;
@@ -248,9 +235,14 @@ nav {
       background-color: $dark-blue;
     }
   }
-}
 
-#target {
+  img {
+    float: left;
+    width: 48px;
+    height: 48px;
+    margin: 4px 5px 0 5px;
+  }
+
   ul {
     overflow:hidden;
     list-style:none;
@@ -292,6 +284,15 @@ nav {
 
     &:last-child {
       border-bottom: none;
+    }
+
+    &:before {
+      content: counter(row);
+      counter-increment: row;
+      float: left;
+      font-size: 20px;
+      color: #b7b7b7; 
+      padding: 15px 20px 15px 10px;
     }
 
     p {
