@@ -99,6 +99,12 @@ nav {
   p {
     margin: 0;
     float: right;
+
+    // logout link
+    a:after {
+      content: '\2192';
+      padding: 0 0 0 5px;
+    }
   }
 
   a {
@@ -163,7 +169,7 @@ nav {
 
   .page-index & {
     width: 720px;
-    margin-bottom: 60px;
+    margin-bottom: 80px;
   }
   
   .page-login & {
