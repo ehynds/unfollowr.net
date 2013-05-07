@@ -4,7 +4,7 @@
 
 module.exports.index = function(req, res) {
   if(!req.session.oauthAccessToken) {
-    res.redirect('/login');
+    res.redirect('/user/login');
     return;
   }
 

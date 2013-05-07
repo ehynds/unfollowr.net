@@ -9,26 +9,26 @@
 
   <ul>
     <li>
-      <h3 class="tpd<% if(mode === 'tpd'){ %> active<% } %>"><%= friend.tpd %></h3>
+      <h3 class="tpd<% if(mode === 'tpd') { %> active<% } %>"><%= friend.tpd %></h3>
       <p>average tweets<br />per day</p>
     </li>
     <li>
-      <h3 class="dl<% if(mode === 'dl'){ %> active<% } %>">
-        <% if(friend.dl == -1){ %>
+      <h3 class="dl<% if(mode === 'dl') { %> active<% } %>">
+        <% if(friend.t === 0) { %>
           never
-        <% } else if(friend.dl == 0){ %>
+        <% } else if(friend.dl == 0) { %>
           today
         <% } else { %>
-          <%= friend.dl %> day<% if(friend.dl != 1){ %>s<% } %>
+          <%= friend.dl %> day<% if(friend.dl != 1) { %>s<% } %>
         <% } %>
       </h3>
       
       <p>
-        <% if(friend.dl == -1){ %>
-          this user has never tweeted
+        <% if(friend.t === 0){ %>
+          this friend has never tweeted
         <% } else { %>
-          <% if(friend.dl != 0){ %>since<% } %>
-          last tweet<br /> on <%= app.format(friend.l) %>
+          <% if(friend.dl > 0) { %>since<% } %>
+          last tweet<br />on <%= app.formatDate(friend.l) %>
         <% } %>
       </p>
     </li>
@@ -36,7 +36,7 @@
       <h3 class="t<% if(mode === 't') { %> active<% } %>">
         <%= friend.t %>
       </h3>
-      <p title="<%= friend.n %> joined Twitter on <%= app.format(friend.c) %>">
+      <p title="<%= friend.n %> joined Twitter on <%= app.formatDate(friend.c) %>">
         tweets in<br /><%= friend.d %> days
       </p>
     </li>

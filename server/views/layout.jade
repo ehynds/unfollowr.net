@@ -15,7 +15,7 @@ html(class="no-js")
     title unfollor &ndash; discover who among your friends are worth unfollowing
     meta(name="description", content="discover who among your friends are worth unfollowing")
     meta(name="viewport", content="width=device-width")
-    link(rel="stylesheet", href="styles/style.css")
+    link(rel="stylesheet", href="/styles/style.css")
 
     body(id="top", class="page-#{page}")
       #container
@@ -25,7 +25,8 @@ html(class="no-js")
           - if (locals.user_id)
             nav
               p
-                a(href="/logout") logout
+                a(href="/twitter/clear") refresh
+                a(href="/user/logout") logout
 
               form Sort by:
                 select(id="sort")

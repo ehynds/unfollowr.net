@@ -71,3 +71,8 @@ module.exports.unfollow = function(req, res) {
     res.send(err || resp);
   });
 };
+
+module.exports.clear = function(req, res) {
+  new User(req.session.user_id).destroy();
+  res.redirect('/');
+};

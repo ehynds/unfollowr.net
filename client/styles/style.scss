@@ -98,13 +98,8 @@ nav {
 
   p {
     margin: 0;
-    float: right;
-
-    // logout link
-    a:after {
-      content: '\2192';
-      padding: 0 0 0 5px;
-    }
+    position: absolute;
+    right: 20px;
   }
 
   a {
@@ -126,6 +121,17 @@ nav {
 
     &.scroll:nth-of-type(2):before {
       content: '\2191';
+      padding: 0 5px 0 0;
+    }
+
+    &[href*="logout"]:after {
+      content: '\2192';
+      padding: 0 0 0 5px;
+    }
+
+    &[href*="clear"]:before {
+      content: '↻';
+      line-height: 0;
       padding: 0 5px 0 0;
     }
   }

@@ -170,7 +170,7 @@ window.app = (function() {
     }
 
     return {
-      format: function(ts) {
+      formatDate: function(ts) {
         var date = new Date(ts);
 
         return 'mm-dd-yyyy'.replace(/(\w+)/g, function(part) {

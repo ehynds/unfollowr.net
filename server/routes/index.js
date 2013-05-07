@@ -16,12 +16,13 @@ module.exports = function(app) {
   app.get('/', home.index);
 
   // User
-  app.get('/login', user.login);
-  app.get('/logout', user.logout);
+  app.get('/user/login', user.login);
+  app.get('/user/logout', user.logout);
 
   // Twitter
   app.get('/twitter/connect', twitter.connect);
   app.get('/twitter/callback', twitter.callback);
   app.get('/twitter/unfollow/:screen_name', restrict, twitter.unfollow);
   app.get('/twitter/get', restrict, twitter.get);
+  app.get('/twitter/clear', restrict, twitter.clear);
 };
