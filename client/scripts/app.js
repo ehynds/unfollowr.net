@@ -117,15 +117,17 @@ window.app = (function() {
     sort: function(event) {
       this.mode = event.currentTarget.value;
       this.render();
+      this._scroll('top');
     },
 
     scroll: function(event) {
       event.preventDefault();
+      this._scroll(event.currentTarget.className.indexOf('top') > -1 ? 'top' : 'bottom');
+    },
 
+    _scroll: function(direction) {
       $body.add('html').animate({
-        scrollTop: event.currentTarget.className.indexOf('top') > -1 ?
-          0 :
-          $footer.offset().top
+        scrollTop: direction === 'top' ?  0 : $footer.offset().top
       }, 'fast');
     },
 
