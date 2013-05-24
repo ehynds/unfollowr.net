@@ -148,7 +148,7 @@ User.oauthAccessToken = null;
 User.consumer = function() {
   var redirect = 'http://';
   // TODO: don't hard-code this
-  redirect += env === 'development' ? 'localhost:8083' : 'www.tweetstats.org';
+  redirect += env === 'development' ? 'localhost:8083' : 'www.unfollowr.net';
   redirect += '/twitter/callback';
 
   return new oauth.OAuth(
