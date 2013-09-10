@@ -1,5 +1,5 @@
 # replace these with your server's information
-set :domain,  "69.164.222.103"
+set :domain,  "192.241.191.34"
 set :user,    "ehynds" 
 set :port,     8486
 set :application, "unfollowr.net"
